@@ -10,4 +10,7 @@ public interface BookService {
     List<Book> findAll();
 
     void addBook(BookDTO bookDTO);
+    Book findByBookId(Long id);
+    Book findByName(String name);
+    Book findByAuthor(String name);
 }

@@ -27,4 +27,34 @@ public class BookServiceImpl implements BookService {
         book.setAuthor(bookDTO.getAuthor());
         bookRepository.save(book);
     }
+
+    @Override
+    public Book findByBookId(Long id) {
+        Optional<Book> bookOptional = bookRepository.findById(id);
+        if (bookOptional.isPresent()){
+            Book book = bookOptional.get();
+            return book;
+        }
+        return null;
+    }
+
+    @Override
+    public Book findByName(String name) {
+        Optional<Book> bookOptional = Optional.ofNullable(bookRepository.findBookByName(name));
+        if (bookOptional.isPresent()){
+            Book book = bookOptional.get();
+            return book;
+        }
+        return null;
+    }
+
+    @Override
+    public Book findByAuthor(String author) {
+        Optional<Book> bookOptional = Optional.ofNullable(bookRepository.findBookByName(author));
+        if (bookOptional.isPresent()){
+            Book book = bookOptional.get();
+            return book;
+        }
+        return null;
+    }
 }

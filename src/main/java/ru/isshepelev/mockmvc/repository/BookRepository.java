@@ -6,4 +6,6 @@ import ru.isshepelev.mockmvc.entity.Book;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book,Long> {
+    Book findBookByName(String name);
+    Book findBookByAuthor(String name);
 }
