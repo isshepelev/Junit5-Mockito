@@ -76,9 +76,9 @@ class BookServiceImplTest {
 
     @Test
     void testFindByAuthor(){
-        String author = "sperma";
+        String author = "pushkin";
         Book book = Mockito.mock(Book.class);
-        when(book.getAuthor()).thenReturn("sperma");
+        when(book.getAuthor()).thenReturn("pushkin");
         when(bookRepository.findBookByAuthor(author)).thenReturn(book);
 
         Book result = bookRepository.findBookByAuthor(author);
