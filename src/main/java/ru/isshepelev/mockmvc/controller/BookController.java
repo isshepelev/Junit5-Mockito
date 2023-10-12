@@ -29,7 +29,6 @@ public class BookController {
     @PostMapping("/add")
     public ResponseEntity<Book> addBook(@RequestBody Book book){
         bookService.addBook(book);
-//        Book book1 = bookService.addBook(book);
         return ResponseEntity.status(HttpStatus.CREATED).body(book);
     }
     @GetMapping("/books/{id}")
@@ -46,14 +45,7 @@ public class BookController {
     @PutMapping("/update/{id}")
     public ResponseEntity<Book> bookUpdate(@PathVariable Long id,
                                            @RequestBody Book book){
-
-        Optional<Book> b = bookRepository.findById(id);
-        if (!b.isPresent())
-            throw  new EntityNotFoundException("id - " + id);
-        Book oldBook = b.get();
-        oldBook.setName(book.getName());
-        oldBook.setAuthor(book.getAuthor());
-        return ResponseEntity.ok().body(bookRepository.save(oldBook));
+        return ResponseEntity.ok().body(bookService.updateBook(id,book));
 
     }
 

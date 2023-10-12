@@ -1,5 +1,6 @@
 package ru.isshepelev.mockmvc.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -58,15 +59,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book updateBook(Long id, Book book) {
-        Optional<Book> bookOptional = bookRepository.findById(id);
-        if (bookOptional.isPresent()){
-            Book book1 = bookOptional.get();
-            book1.setId(book1.getId());
-            book1.setName(book.getName());
-            book1.setAuthor(book.getAuthor());
-            bookRepository.save(book1);
-        }
-        return null;
+        Optional<Book> b = bookRepository.findById(id);
+        if (!b.isPresent())
+            throw  new EntityNotFoundException("id - " + id);
+        Book oldBook = b.get();
+        oldBook.setName(book.getName());
+        oldBook.setAuthor(book.getAuthor());
+        return bookRepository.save(oldBook);
     }
 
     @Override
