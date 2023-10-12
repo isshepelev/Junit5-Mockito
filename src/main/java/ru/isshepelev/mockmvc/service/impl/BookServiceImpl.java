@@ -1,6 +1,7 @@
 package ru.isshepelev.mockmvc.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.isshepelev.mockmvc.dto.BookDTO;
 import ru.isshepelev.mockmvc.entity.Book;
@@ -21,10 +22,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void addBook(BookDTO bookDTO) {
-        Book book = new Book();
-        book.setName(bookDTO.getName());
-        book.setAuthor(bookDTO.getAuthor());
+    public void addBook(Book book) {
         bookRepository.save(book);
     }
 
@@ -54,6 +52,27 @@ public class BookServiceImpl implements BookService {
         if (bookOptional.isPresent()){
             Book book = bookOptional.get();
             return book;
+        }
+        return null;
+    }
+
+    @Override
+    public Book updateBook(Long id, BookDTO bookDTO) {
+        Optional<Book> bookOptional = bookRepository.findById(id);
+        if (bookOptional.isPresent()){
+            Optional<Book> book = bookRepository.findById(id);
+            book.get().setName(bookDTO.getName());
+            book.get().setAuthor(bookDTO.getAuthor());
+            bookRepository.save(book.get());
+        }
+        return null;
+    }
+
+    @Override
+    public Void deleteBook(Long id) {
+        Optional<Book> bookOptional = bookRepository.findById(id);
+        if (bookOptional.isPresent()){
+            bookRepository.deleteById(id);
         }
         return null;
     }

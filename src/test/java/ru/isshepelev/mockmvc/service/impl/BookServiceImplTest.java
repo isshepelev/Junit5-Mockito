@@ -1,5 +1,6 @@
 package ru.isshepelev.mockmvc.service.impl;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,6 +11,7 @@ import ru.isshepelev.mockmvc.dto.BookDTO;
 import ru.isshepelev.mockmvc.entity.Book;
 import ru.isshepelev.mockmvc.repository.BookRepository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -24,13 +26,15 @@ import static org.mockito.Mockito.when;
 class BookServiceImplTest {
     @InjectMocks
     private BookServiceImpl bookService;
-
     @Mock
     private BookRepository bookRepository;
 
     @Test
     void testFindAll() {
-        List<Book> books = Arrays.asList(new Book(1L, "Book1", "Author1"), new Book(2L, "Book2", "Author2"));
+        List<Book> books = Arrays.asList(
+                new Book(1L, "Book1", "Author1"),
+                new Book(2L, "Book2", "Author2"));
+
         when(bookRepository.findAll()).thenReturn(books);
 
         List<Book> result = bookService.findAll();
@@ -42,9 +46,9 @@ class BookServiceImplTest {
 
     @Test
     void testAddBook() {
-        BookDTO bookDTO = new BookDTO();
+        Book book = new Book();
 
-        bookService.addBook(bookDTO);
+        bookService.addBook(book);
 
         verify(bookRepository, times(1)).save(any(Book.class));
     }
@@ -87,4 +91,18 @@ class BookServiceImplTest {
         assertEquals(author, result.getAuthor());
     }
 
+    @Test
+    void findBookById(){
+        Long id = 1L;
+        Book book = new Book();
+        book.setName("nameee");
+        book.setAuthor("authorr");
+        book.setId(id);
+
+        when(bookRepository.findById(id)).thenReturn(Optional.of(book));
+
+        Book result = bookService.findByBookId(id);
+
+        assertEquals(book, result);
+    }
 }
