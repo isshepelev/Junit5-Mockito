@@ -58,7 +58,7 @@ class BookControllerTest {
                                 [
                                     {
                                         "id": 1,
-                                        "name": "sperma",
+                                        "name": "name",
                                         "author": "Ilya"
                                     },
                                     {
