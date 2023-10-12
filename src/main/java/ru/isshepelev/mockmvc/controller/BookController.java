@@ -1,19 +1,23 @@
 package ru.isshepelev.mockmvc.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.isshepelev.mockmvc.dto.BookDTO;
 import ru.isshepelev.mockmvc.entity.Book;
+import ru.isshepelev.mockmvc.repository.BookRepository;
 import ru.isshepelev.mockmvc.service.BookService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
 public class BookController {
     private final BookService bookService;
+    private final BookRepository bookRepository;
 
 
     @GetMapping("/books")
@@ -41,14 +45,16 @@ public class BookController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Book> bookUpdate(@PathVariable Long id,
-                                           @RequestBody BookDTO bookDTO){
+                                           @RequestBody Book book){
 
-        Book book = bookService.updateBook(id,bookDTO);
-        if (book != null){
-            return ResponseEntity.ok(book);
-        }else {
-            return ResponseEntity.notFound().build();
-        }
+        Optional<Book> b = bookRepository.findById(id);
+        if (!b.isPresent())
+            throw  new EntityNotFoundException("id - " + id);
+        Book oldBook = b.get();
+        oldBook.setName(book.getName());
+        oldBook.setAuthor(book.getAuthor());
+        return ResponseEntity.ok().body(bookRepository.save(oldBook));
+
     }
 
     @DeleteMapping("/delete/{id}")

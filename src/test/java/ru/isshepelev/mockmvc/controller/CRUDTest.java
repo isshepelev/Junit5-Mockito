@@ -13,8 +13,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import ru.isshepelev.mockmvc.dto.BookDTO;
 import ru.isshepelev.mockmvc.entity.Book;
 import ru.isshepelev.mockmvc.repository.BookRepository;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,10 +34,11 @@ public class CRUDTest {
     private MockMvc mockMvc;
 
 
-//    @AfterEach
-//    public void resetDb() {
-//        repository.deleteAll();
-//    }
+    @BeforeEach
+    public void resetDb() {
+        repository.deleteAll();
+    }
+
 
     private Book createBook(String name, String author){
         Book book = new Book();
@@ -46,28 +47,47 @@ public class CRUDTest {
         return repository.save(book);
     }
 
+
     @Test
     void getFindBookById() throws Exception {
-        long id = createBook("имя книги", "автор книги").getId();
+        long id = createBook("get", "get").getId();
 
         mockMvc.perform(get("/books/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
-                .andExpect(jsonPath("$.name").value("имя книги"))
-                .andExpect(jsonPath("$.author").value("автор книги"));
+                .andExpect(jsonPath("$.name").value("get"))
+                .andExpect(jsonPath("$.author").value("get"));
     }
+    @Test
+    void postBookCreate() throws Exception {
+        mockMvc.perform(post("/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": \"post\", \"author\": \"post\"}")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("post"))
+                .andExpect(jsonPath("$.author").value("post"));
 
+    }
     @Test
     void putUpdateBookById()throws Exception{
         long id = createBook("имя книги", "автор книги").getId();
 
         mockMvc.perform(put("/update/{id}", id)
-                        .content(objectMapper.writeValueAsString(new Book(312412L,"new book", "new author")))
+                        .content(objectMapper.writeValueAsString(new Book(id,"put", "put")))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(11617586))
-                .andExpect(jsonPath("$.name").value("new book"))
-                .andExpect(jsonPath("$.author").value("new author"));
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value("put"))
+                .andExpect(jsonPath("$.author").value("put"));
 
+    }
+
+    @Test
+    void deleteTest() throws Exception{
+        long id = createBook("имя книги", "автор книги").getId();
+
+        mockMvc.perform(delete("/delete/{id}", id))
+                .andExpect(status().isOk());
     }
 }

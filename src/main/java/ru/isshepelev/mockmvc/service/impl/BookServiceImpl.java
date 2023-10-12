@@ -57,13 +57,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book updateBook(Long id, BookDTO bookDTO) {
+    public Book updateBook(Long id, Book book) {
         Optional<Book> bookOptional = bookRepository.findById(id);
         if (bookOptional.isPresent()){
-            Optional<Book> book = bookRepository.findById(id);
-            book.get().setName(bookDTO.getName());
-            book.get().setAuthor(bookDTO.getAuthor());
-            bookRepository.save(book.get());
+            Book book1 = bookOptional.get();
+            book1.setId(book1.getId());
+            book1.setName(book.getName());
+            book1.setAuthor(book.getAuthor());
+            bookRepository.save(book1);
         }
         return null;
     }
