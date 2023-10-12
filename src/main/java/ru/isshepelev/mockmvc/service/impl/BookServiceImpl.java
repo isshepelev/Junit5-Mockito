@@ -23,14 +23,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void addBook(Book book) {
-        bookRepository.save(book);
-    }
-
-    @Override
     public Book findByBookId(Long id) {
         Optional<Book> bookOptional = bookRepository.findById(id);
-        if (bookOptional.isPresent()){
+        if (bookOptional.isPresent()) {
             Book book = bookOptional.get();
             return book;
         }
@@ -38,9 +33,34 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public void addBook(Book book) {
+        bookRepository.save(book);
+    }
+
+    @Override
+    public Book updateBook(Long id, BookDTO bookDTO) {
+        Optional<Book> b = bookRepository.findById(id);
+        if (!b.isPresent())
+            throw new EntityNotFoundException("id - " + id);
+        Book oldBook = b.get();
+        oldBook.setName(bookDTO.getName());
+        oldBook.setAuthor(bookDTO.getAuthor());
+        return bookRepository.save(oldBook);
+    }
+
+    @Override
+    public Void deleteBook(Long id) {
+        Optional<Book> bookOptional = bookRepository.findById(id);
+        if (bookOptional.isPresent()) {
+            bookRepository.deleteById(id);
+        }
+        return null;
+    }
+
+    @Override
     public Book findByName(String name) {
         Optional<Book> bookOptional = Optional.ofNullable(bookRepository.findBookByName(name));
-        if (bookOptional.isPresent()){
+        if (bookOptional.isPresent()) {
             Book book = bookOptional.get();
             return book;
         }
@@ -50,29 +70,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book findByAuthor(String author) {
         Optional<Book> bookOptional = Optional.ofNullable(bookRepository.findBookByName(author));
-        if (bookOptional.isPresent()){
+        if (bookOptional.isPresent()) {
             Book book = bookOptional.get();
             return book;
-        }
-        return null;
-    }
-
-    @Override
-    public Book updateBook(Long id, Book book) {
-        Optional<Book> b = bookRepository.findById(id);
-        if (!b.isPresent())
-            throw  new EntityNotFoundException("id - " + id);
-        Book oldBook = b.get();
-        oldBook.setName(book.getName());
-        oldBook.setAuthor(book.getAuthor());
-        return bookRepository.save(oldBook);
-    }
-
-    @Override
-    public Void deleteBook(Long id) {
-        Optional<Book> bookOptional = bookRepository.findById(id);
-        if (bookOptional.isPresent()){
-            bookRepository.deleteById(id);
         }
         return null;
     }

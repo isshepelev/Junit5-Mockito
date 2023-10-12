@@ -27,22 +27,23 @@ class BookRepositoryTest {
     List<?> mockList;
 
     @Test
-    public void whenMockAnnotation () {
+    public void whenMockAnnotation() {
         doReturn("Иван").when(mockList).get(10);
         doReturn("Марья").when(mockList).get(500);
 
         assertEquals("Иван", mockList.get(10));
         assertEquals("Марья", mockList.get(500));
     }
+
     @Test
-    void MockAny(){
+    void MockAny() {
         doReturn("Иван").when(mockList).get(anyInt());
 
-        assertEquals("Иван" , mockList.get(3));
+        assertEquals("Иван", mockList.get(3));
     }
 
     @Test
-    void inOrderMock(){
+    void inOrderMock() {
         mockList.size();
         mockList.get(4);
         mockList.clear();
@@ -54,7 +55,7 @@ class BookRepositoryTest {
     }
 
     @Test
-    void ThrowsMock(){
+    void ThrowsMock() {
         when(mockList.size()).thenThrow(IllegalStateException.class);
 
         assertThrows(IllegalStateException.class, () -> mockList.size());

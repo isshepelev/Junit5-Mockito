@@ -40,7 +40,7 @@ public class CRUDTest {
     }
 
 
-    private Book createBook(String name, String author){
+    private Book createBook(String name, String author) {
         Book book = new Book();
         book.setAuthor(author);
         book.setName(name);
@@ -58,6 +58,7 @@ public class CRUDTest {
                 .andExpect(jsonPath("$.name").value("get"))
                 .andExpect(jsonPath("$.author").value("get"));
     }
+
     @Test
     void postBookCreate() throws Exception {
         mockMvc.perform(post("/add")
@@ -69,12 +70,13 @@ public class CRUDTest {
                 .andExpect(jsonPath("$.author").value("post"));
 
     }
+
     @Test
-    void putUpdateBookById()throws Exception{
+    void putUpdateBookById() throws Exception {
         long id = createBook("имя книги", "автор книги").getId();
 
         mockMvc.perform(put("/update/{id}", id)
-                        .content(objectMapper.writeValueAsString(new Book(id,"put", "put")))
+                        .content(objectMapper.writeValueAsString(new Book(id, "put", "put")))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
@@ -84,7 +86,7 @@ public class CRUDTest {
     }
 
     @Test
-    void deleteTest() throws Exception{
+    void deleteTest() throws Exception {
         long id = createBook("имя книги", "автор книги").getId();
 
         mockMvc.perform(delete("/delete/{id}", id))

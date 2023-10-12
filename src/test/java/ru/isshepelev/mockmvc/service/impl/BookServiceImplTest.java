@@ -79,7 +79,7 @@ class BookServiceImplTest {
     }
 
     @Test
-    void testFindByAuthor(){
+    void testFindByAuthor() {
         String author = "pushkin";
         Book book = Mockito.mock(Book.class);
         when(book.getAuthor()).thenReturn("pushkin");
@@ -92,7 +92,7 @@ class BookServiceImplTest {
     }
 
     @Test
-    void findBookById(){
+    void findBookById() {
         Long id = 1L;
         Book book = new Book();
         book.setName("nameee");
